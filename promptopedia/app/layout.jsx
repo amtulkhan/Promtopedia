@@ -11,6 +11,7 @@ export const metadata = {
   return (
     <html lang="en">
         <body>
+            <Provider>
             <div className="main">
                 <div className="gradient"/>
             </div>
@@ -18,6 +19,7 @@ export const metadata = {
                 <Nav/>
                 {children}
             </main>
+            </Provider>
         </body>
     </html>
   )
