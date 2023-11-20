@@ -6,17 +6,19 @@ import { useState,useEffect, } from 'react'
 import {signIn,signOut,useSession,getProviders} from 'next-auth/react'
 
 const Nav = () => {
-  const isUserLoggedIn = true;
+  const {Data: session} = useSession();
   const [providers,setProviders] = useState(null);
   const [toggleDropDown,setToggleDropDown] = useState(false);
   useEffect(()=>{
-      const SetProviders = async () =>{
+      const SetUpProviders = async () =>{
         const response = await getProviders();
         setProviders(response);
         
       }
-      SetProviders();
+      SetUpProviders();
   },[])
+  console.log(providers);
+  console.log(session);
   return (
     <nav className='flex-between w-full mb-16 pt-3'>
         <Link href="/"className='flex flex-center gap-2'>
@@ -25,26 +27,32 @@ const Nav = () => {
         </Link>
         <div className="sm:flex hidden">
           {
-          isUserLoggedIn?(<div className='flex gap-3 md:gap-5'>
+            
+          session?(<div className='flex gap-3 md:gap-5'>
             <Link href="/create-prompt" className='black_btn'>
               Create Post
             </Link>
-            <button type='button' className='outline_btn' onClick={signOut}> Sign Out</button>
+            <button type='button' className='outline_btn' onClick={signOut}>Sign Out</button>
             <Link href="/profile">
-              <Image src="assets/images/logo.svg" alt='Profile Image' width={37} height={37} className='rounded-full'/>
+              <Image src={session?.user.image} alt='Profile Image' width={37} height={37} className='rounded-full'/>
             </Link>
 
-          </div>):<>
-              {providers && Object.values(providers).map((provider)=>{
+          </div>)
+         
+          :<>
+              {providers && Object.values(providers).map((provider)=>(
                 <button type='button' className='black_btn' key={provider.name} onClick={()=>signIn(provider.id)}>Sign In</button>
-              })}
+              ))}
           </>
           }
         </div>
+        
         <div className='sm:hidden flex relative'>
+          
         {
-          isUserLoggedIn?(<div className='flex'>
-            <Image src="assets/images/logo.svg" alt='Promptopedia Logo' width={37} height={37} className='object-contain' onClick={()=>(setToggleDropDown(prev=>!prev))} />
+          session?
+          (<div className='flex'>
+            <Image src={session?.user.image} alt='Promptopedia Logo' width={37} height={37} className='object-contain' onClick={()=>(setToggleDropDown(prev=>!prev))} />
             {toggleDropDown && (
               <div className='dropdown'>
                 <Link className='dropdown_link' href='/profile' onClick={()=>setToggleDropDown(false)}>Profile</Link>
@@ -52,10 +60,11 @@ const Nav = () => {
                 <button type='button' className='mt-5 w-full black_btn' onClick={()=>{setToggleDropDown(false); signOut();}}>Sign Out</button>
               </div>
             )}
-          </div>):<>
-              {providers && Object.values(providers).map((provider)=>{
+          </div>)
+          :<>
+              {providers && Object.values(providers).map((provider)=>(
                 <button type='button' className='black_btn' key={provider.name} onClick={()=>signIn(provider.id)}>Sign In</button>
-              })}
+              ))}
           </>
           }
 
