@@ -7,13 +7,13 @@ const EditPrompt = () => {
     
   const router = useRouter();
   const searchParams = useSearchParams();
-  const promptId = searchParams.get('id')
+  const promptId = searchParams.get("id");
   const [submitting,setSubmitting] = useState(false)
   const [post,setPost] = useState({
     prompt:'',
     tag:''
   })
-  console.log(promptId);
+  
   useEffect(()=>{
     const promptDetails = async() =>{
         const response = await fetch(`/api/prompt/${promptId}`)
