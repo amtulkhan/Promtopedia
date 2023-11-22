@@ -1,17 +1,31 @@
 'use client'
-import {useState} from 'react'
-import { useSession } from 'next-auth/react'
-import { useRouter } from 'next/navigation'
+import {useState,useEffect} from 'react'
+import { useRouter,useSearchParams } from 'next/navigation'
 import Form from '@components/Form'
 
-const CreatePrompt = () => {
+const EditPrompt = () => {
+    
   const router = useRouter();
-  const {data:session} = useSession();
+  const searchParams = useSearchParams();
+  const promptId = searchParams.get('id')
   const [submitting,setSubmitting] = useState(false)
   const [post,setPost] = useState({
     prompt:'',
     tag:''
   })
+  console.log(promptId);
+  useEffect(()=>{
+    const promptDetails = async() =>{
+        const response = await fetch(`/api/prompt/${promptId}`)
+        const data = await response.json();
+        console.log(data,"on edit");
+        setPost({
+            prompt:data.prompt,
+            tag:data.tag
+        })
+    }
+    if(promptId) promptDetails();
+  },[promptId])
   const createPrompt = async (e)=>{
     e.preventDefault();
     setSubmitting(true);
@@ -24,7 +38,7 @@ const CreatePrompt = () => {
           tag:post.tag
         })
       })
-      
+      console.log(response);
       if(response.ok){
         router.push('/');
       }
@@ -38,7 +52,7 @@ const CreatePrompt = () => {
   }
   return (
     <Form
-    type='Create'
+    type='Edit'
     post={post}
     setPost={setPost}
     submitting={submitting}
@@ -47,4 +61,4 @@ const CreatePrompt = () => {
   )
 }
 
-export default CreatePrompt
+export default EditPrompt
