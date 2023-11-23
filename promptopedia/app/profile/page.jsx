@@ -27,7 +27,7 @@ const ProfilePage = () => {
         const hasConfirmed = confirm('Do you really want to delete the prompt?');
         if(hasConfirmed){
           try{
-              await fetch(`/api/prompt/${post._id}`,{
+              await fetch(`/api/prompt/${post._id.toString()}`,{
                 method:"DELETE"
               });
               const filteredPosts = posts.filter((p)=>{
