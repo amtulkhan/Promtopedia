@@ -51,7 +51,7 @@ export const DELETE = async(request,{params}) =>{
 
     }
     catch(error){
-        return new Response('Failed to delete prompt',{status:500})
+        return new Response('Failed to delete prompt',{status:500, error: error})
         
     }
 }
